@@ -1,0 +1,12 @@
+# --- Sensitive Data ---
+# NO database credentials!
+database.php
+.env
+
+# --- System & OS Files ---
+.DS_Store
+Thumbs.db
+php_info.php
+error_log
+.htaccess
+images/**
