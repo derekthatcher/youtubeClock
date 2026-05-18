@@ -1,6 +1,6 @@
 #yt-tracker-overlay {
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
   z-index: 999999;
   background-color: rgba(0, 0, 0, 0.9);
@@ -12,14 +12,14 @@
   font-weight: bold;
   border: 2px solid #ff0000;
   box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
-  cursor: pointer; /* Shows it's clickable */
+  cursor: pointer; 
   transition: all 0.3s ease;
   user-select: none;
 }
 
 /* Container for the hidden history data */
 #yt-tracker-dropdown {
-  display: none; /* Hidden by default */
+  display: none;
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid #444;
@@ -37,7 +37,7 @@
   color: #fff;
 }
 
-/* The pulse animation from earlier */
+/* The pulse animation - every ten minutes */
 @keyframes intense-pulse {
   0% { background-color: rgba(0, 0, 0, 0.9); border-color: #ff0000; }
   50% { background-color: rgba(255, 0, 0, 0.95); border-color: #fff; transform: scale(1.05); }

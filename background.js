@@ -21,10 +21,10 @@ async function checkAndTrackTime() {
   const todayStr = getLocalDateString(now);
   const currentYear = now.getFullYear().toString();
 
-  // 1. Get active tab
+  // Get active tab
   const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   
-  // 2. Fetch tracking history database
+  // Fetch tracking history database
   const storage = await chrome.storage.local.get(["yt_history"]);
   let history = storage.yt_history || {};
 
@@ -33,13 +33,13 @@ async function checkAndTrackTime() {
     history[todayStr] = 0;
   }
 
-  // 3. Accumulate time if active on YouTube
+  // Accumulate time if active on YouTube
   if (activeTab && activeTab.url && activeTab.url.includes("youtube.com")) {
     history[todayStr] += 1 / 60; // Add 1 second in minute fragments
     await chrome.storage.local.set({ yt_history: history });
   }
 
-  // 4. Calculate stats (Today, Last 7 Days, Year to Date)
+  // Calculate stats (Today, Last 7 Days, Year to Date)
   const todayMins = history[todayStr] || 0;
   let last7DaysMins = 0;
   let thisYearMins = 0;
@@ -60,11 +60,11 @@ async function checkAndTrackTime() {
     }
   }
 
-  // 5. Update browser badge icon
+  // Update browser badge icon
   chrome.action.setBadgeText({ text: formatBadgeText(todayMins) });
   chrome.action.setBadgeBackgroundColor({ color: "#FF0000" });
 
-  // 6. Broadcast payload to content script script
+  // Broadcast payload to content script script
   if (activeTab && activeTab.url && activeTab.url.includes("youtube.com")) {
     chrome.tabs.sendMessage(activeTab.id, { 
       action: "updateTime", 

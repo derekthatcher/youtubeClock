@@ -48,14 +48,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "updateTime") {
     const stats = request.stats;
     
-    // 1. Update Today's live time
+    // Update Today's live time
     liveTimeSpan.innerText = formatDisplayTime(stats.today);
 
-    // 2. Update the dropdown statistics
+    // Update the dropdown statistics
     document.getElementById('yt-stat-7day').innerHTML = `Last 7 Days: <strong>${formatHours(stats.last7Days)}</strong>`;
     document.getElementById('yt-stat-year').innerHTML = `This Year: <strong>${formatHours(stats.thisYear)}</strong>`;
 
-    // 3. Keep the 10-minute pulse working
+    // Keep the 10-minute pulse working
     const currentMilestone = Math.floor(stats.today / 10);
     if (currentMilestone > lastPulseMilestone && currentMilestone > 0) {
       lastPulseMilestone = currentMilestone;
