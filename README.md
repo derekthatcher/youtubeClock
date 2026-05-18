@@ -1,6 +1,6 @@
-# YouTube Time Awareness Tool
+# YouTubeClock -  Time Awareness Tool
 
-A small Chrome extension made to help young people keep track of how much time they spend on YouTube.
+A small Chrome extension made to help people keep track of how much time they spend on YouTube. Made for son to help him self manage.
 
 ## What it does
 
