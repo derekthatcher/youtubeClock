@@ -1,7 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Time Tracker",
+  "name": "YouTube Clock",
   "version": "1.1",
+  "description": "Permanently tracks daily YouTube watch time with badge icons, screen overlays, and custom break reminders.",
+  "author": "Derek Thatcher, Coen and Gemini Flash",
   "permissions": [
     "storage",
     "tabs",
@@ -11,10 +13,11 @@
     "*://*.youtube.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "action": {
-    "default_title": "YouTube Time Tracker",
+    "default_title": "YouTube Clock",
     "default_icon": "icon.png"
   },
   "content_scripts": [

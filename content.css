@@ -14,3 +14,30 @@
   pointer-events: none; /* Allows you to click "through" it if it blocks a button */
   box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
 }
+
+/* The animation logic */
+@keyframes intense-pulse {
+  0% {
+    background-color: rgba(0, 0, 0, 0.85);
+    border-color: #ff0000;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    background-color: rgba(255, 0, 0, 0.95); /* Deep red */
+    border-color: #ffffff;
+    box-shadow: 0px 0px 25px #ff0000; /* Outer red glow */
+    transform: scale(1.1); /* Slightly grows the widget */
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.85);
+    border-color: #ff0000;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    transform: scale(1.0);
+  }
+}
+
+/* The class we will add dynamically via JS. 
+   It will pulse 3 times over 3 seconds, then stop. */
+.pulse-red {
+  animation: intense-pulse 1s ease-in-out 3;
+}
