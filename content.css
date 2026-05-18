@@ -1,0 +1,16 @@
+#yt-tracker-overlay {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999999; /* Ensures it sits on top of the video player */
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 44px; /* <--- Make this as big as you want! */
+  font-weight: bold;
+  border: 2px solid #ff0000;
+  pointer-events: none; /* Allows you to click "through" it if it blocks a button */
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+}
