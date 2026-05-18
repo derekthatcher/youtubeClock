@@ -6,6 +6,7 @@ A small Chrome extension made to help young people keep track of how much time t
 
 - Shows a simple clock-style indicator while browsing YouTube.
 - Tracks time spent that day, pulses every ten minutes.
+- Click to show last 7 days and year.
 - Helps you notice how long you've been watching.
 - Keeps things easy and friendly so you can make better choices about screen time.
 

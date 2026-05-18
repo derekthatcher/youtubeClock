@@ -1,43 +1,49 @@
 #yt-tracker-overlay {
   position: fixed;
-  top: 20px;
+  bottom: 20px;
   right: 20px;
-  z-index: 999999; /* Ensures it sits on top of the video player */
-  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 999999;
+  background-color: rgba(0, 0, 0, 0.9);
   color: #fff;
   padding: 12px 20px;
   border-radius: 8px;
   font-family: Arial, sans-serif;
-  font-size: 44px; /* <--- Make this as big as you want! */
+  font-size: 44px;
   font-weight: bold;
   border: 2px solid #ff0000;
-  pointer-events: none; /* Allows you to click "through" it if it blocks a button */
   box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+  cursor: pointer; /* Shows it's clickable */
+  transition: all 0.3s ease;
+  user-select: none;
 }
 
-/* The animation logic */
+/* Container for the hidden history data */
+#yt-tracker-dropdown {
+  display: none; /* Hidden by default */
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #444;
+  font-size: 14px;
+  font-weight: normal;
+  color: #ccc;
+  text-align: left;
+}
+
+#yt-tracker-dropdown div {
+  margin: 5px 0;
+}
+
+#yt-tracker-dropdown strong {
+  color: #fff;
+}
+
+/* The pulse animation from earlier */
 @keyframes intense-pulse {
-  0% {
-    background-color: rgba(0, 0, 0, 0.85);
-    border-color: #ff0000;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-  }
-  50% {
-    background-color: rgba(255, 0, 0, 0.95); /* Deep red */
-    border-color: #ffffff;
-    box-shadow: 0px 0px 25px #ff0000; /* Outer red glow */
-    transform: scale(1.1); /* Slightly grows the widget */
-  }
-  100% {
-    background-color: rgba(0, 0, 0, 0.85);
-    border-color: #ff0000;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    transform: scale(1.0);
-  }
+  0% { background-color: rgba(0, 0, 0, 0.9); border-color: #ff0000; }
+  50% { background-color: rgba(255, 0, 0, 0.95); border-color: #fff; transform: scale(1.05); }
+  100% { background-color: rgba(0, 0, 0, 0.9); border-color: #ff0000; }
 }
 
-/* The class we will add dynamically via JS. 
-   It will pulse 3 times over 3 seconds, then stop. */
 .pulse-red {
   animation: intense-pulse 1s ease-in-out 3;
 }

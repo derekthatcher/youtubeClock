@@ -1,12 +1,13 @@
 let timerInterval = null;
 
-// Helper to get today's date string (e.g., "2026-05-18")
-function getTodayDateString() {
-  const today = new Date();
-  return today.toISOString().split('T')[0];
+// Returns current local date as "YYYY-MM-DD"
+function getLocalDateString(date = new Date()) {
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+  return localDate.toISOString().split('T')[0];
 }
 
-// Format minutes into a clean badge string (e.g., "15m", "1.2h")
+// Formats badge text for the toolbar icon
 function formatBadgeText(totalMinutes) {
   if (totalMinutes < 60) {
     return `${Math.floor(totalMinutes)}m`;
@@ -15,51 +16,73 @@ function formatBadgeText(totalMinutes) {
   }
 }
 
-// Core function to check tabs and update time
 async function checkAndTrackTime() {
-  const todayStr = getTodayDateString();
-  
-  // Get active tab
+  const now = new Date();
+  const todayStr = getLocalDateString(now);
+  const currentYear = now.getFullYear().toString();
+
+  // 1. Get active tab
   const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
   
-  // Fetch current stats from storage
-  const data = await chrome.storage.local.get([todayStr]);
-  let currentMinutes = data[todayStr] || 0;
+  // 2. Fetch tracking history database
+  const storage = await chrome.storage.local.get(["yt_history"]);
+  let history = storage.yt_history || {};
 
-  if (activeTab && activeTab.url && activeTab.url.includes("youtube.com")) {
-    // Add 1 second (1/60 of a minute)
-    currentMinutes += 1 / 60;
-    
-    const updateData = {};
-    updateData[todayStr] = currentMinutes;
-    await chrome.storage.local.set(updateData);
+  // If a brand new day, initialize it
+  if (!history[todayStr]) {
+    history[todayStr] = 0;
   }
 
-  // Always update the badge display so it stays permanent
-  chrome.action.setBadgeText({ text: formatBadgeText(currentMinutes) });
-  chrome.action.setBadgeBackgroundColor({ color: "#FF0000" }); // YouTube Red
+  // 3. Accumulate time if active on YouTube
   if (activeTab && activeTab.url && activeTab.url.includes("youtube.com")) {
-    chrome.tabs.sendMessage(activeTab.id, { action: "updateTime", time: currentMinutes }).catch(() => {
-      // Catch errors if the tab is loading or doesn't have the content script ready yet
-    });
+    history[todayStr] += 1 / 60; // Add 1 second in minute fragments
+    await chrome.storage.local.set({ yt_history: history });
+  }
+
+  // 4. Calculate stats (Today, Last 7 Days, Year to Date)
+  const todayMins = history[todayStr] || 0;
+  let last7DaysMins = 0;
+  let thisYearMins = 0;
+
+  // Loop through history database to calculate aggregated sums
+  for (const [dateStr, mins] of Object.entries(history)) {
+    // Year Check
+    if (dateStr.startsWith(currentYear)) {
+      thisYearMins += mins;
+    }
+    
+    // 7 Day Check
+    const logDate = new Date(dateStr + 'T00:00:00');
+    const timeDiff = now - logDate;
+    const dayDiff = timeDiff / (1000 * 60 * 60 * 24);
+    if (dayDiff >= 0 && dayDiff < 7) {
+      last7DaysMins += mins;
+    }
+  }
+
+  // 5. Update browser badge icon
+  chrome.action.setBadgeText({ text: formatBadgeText(todayMins) });
+  chrome.action.setBadgeBackgroundColor({ color: "#FF0000" });
+
+  // 6. Broadcast payload to content script script
+  if (activeTab && activeTab.url && activeTab.url.includes("youtube.com")) {
+    chrome.tabs.sendMessage(activeTab.id, { 
+      action: "updateTime", 
+      stats: {
+        today: todayMins,
+        last7Days: last7DaysMins,
+        thisYear: thisYearMins
+      }
+    }).catch(() => { /* Catch safe initialization drops */ });
   }
 }
 
-// Start tracking loop
 function startTracking() {
   if (!timerInterval) {
-    timerInterval = setInterval(checkAndTrackTime, 1000); // Check every second
+    timerInterval = setInterval(checkAndTrackTime, 1000);
   }
 }
 
-// Initialize on startup/install
-chrome.runtime.onInstalled.addListener(() => {
-  startTracking();
-});
-
-chrome.runtime.onStartup.addListener(() => {
-  startTracking();
-});
-
-// Ensure tracker starts up if background worker wakes up
+chrome.runtime.onInstalled.addListener(startTracking);
+chrome.runtime.onStartup.addListener(startTracking);
 startTracking();
