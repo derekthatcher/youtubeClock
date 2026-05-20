@@ -1,7 +1,7 @@
 #yt-tracker-overlay {
   position: fixed;
-  bottom: calc(100vh - 100px); 
-  left: calc(100vw - 220px);
+  top: 20px; 
+  right: 20px;
   z-index: 999999;
   background-color: rgba(0, 0, 0, 0.9);
   color: #fff;
